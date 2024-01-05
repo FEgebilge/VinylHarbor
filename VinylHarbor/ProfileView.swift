@@ -98,7 +98,6 @@ extension ProfileView{
                     .padding(.vertical,7)
                 .font(.caption)
                 .foregroundColor(.secondary)
-                Spacer()
                 HStack {
                     HStack(spacing:20){
                         HStack{

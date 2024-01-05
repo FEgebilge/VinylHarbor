@@ -133,6 +133,7 @@ struct SearchBar: View {
                 .cornerRadius(8)
                 .padding(.horizontal)
                 .padding(.vertical)
+                .shadow(color: .black.opacity(0.7), radius: 8, x: 0, y: 0)
         }
     }
     

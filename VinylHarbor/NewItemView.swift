@@ -9,6 +9,9 @@ import SwiftUI
 
 struct NewItemView: View {
     
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    
     @State private var title: String = ""
     @State private var artist: String = ""
     @State private var releaseDate: Date = Date()
@@ -31,6 +34,8 @@ struct NewItemView: View {
     @Environment (\.dismiss) var dismiss
     var body: some View {
         
+      
+        
         /*NavigationLink(destination: SearchView(), isActive: $isAddingNewItem) {
                 EmptyView()
             }
@@ -45,14 +50,6 @@ struct NewItemView: View {
        
         VStack(alignment:.leading){
             HStack{
-                Button {
-                    print("Cancel Add Item")
-                  
-                    dismiss()
-                } label: {
-                    Text("Cancel")
-                        .foregroundColor(Color.purple)
-                }
                 Spacer()
              
                        
@@ -79,15 +76,13 @@ struct NewItemView: View {
     
             }
             .padding()
-            HStack(alignment:.top){
-                ScrollView{
-                    LazyVStack{
-                        NavigationView {
+         
                             Form {
                                 Section(header: Text("Record Information")) {
                                     TextField("Title", text: $title)
                                     TextField("Artist", text: $artist)
                                     DatePicker("Release Date", selection: $releaseDate, displayedComponents: .date)
+                                        .datePickerStyle(.compact)
                                         .accentColor(.purple)
                                     TextField("Genre", text: $genre)
                                     
@@ -117,29 +112,33 @@ struct NewItemView: View {
                                     
                                     
                                     TextField("Description", text: $description)
-                                    
                                 }
-                                Section {
-                                    
-                                }
-                                
                             }
+                            .scrollContentBackground(.hidden)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
                             .foregroundStyle(Color.purple)
                             .navigationBarTitleDisplayMode(.large)
-                            
-                            
-                        }
-                    }
-                }
-            }
-            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            Spacer()
+                          
+                          
+               
         }
+        
         .background(gradient)
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("Warning"),
+                message: Text(alertMessage),
+                dismissButton: .default(Text("OK"))
+            )
+        }
+
         .onDisappear(){
             SearchView().refreshVinyl()
         }
         
     }
+
  
     func saveDataToDatabase() {
         guard !title.isEmpty,
@@ -150,8 +149,10 @@ struct NewItemView: View {
                 !description.isEmpty,
                 price > 0.0
                 else {
-              // Show an alert or perform some action to notify the user about empty fields
-              return
+            
+                alertMessage = "Please fill in all the fields."
+                  showAlert = true
+                  return
           }
 
         DatabaseManager.insertVinyl(title: title, artist: artist, releaseDate: releaseDate, genre: genre, condition: condition, coverCondition: coverCondition, price: price, description: description, sellerID: sellerID)
@@ -159,6 +160,7 @@ struct NewItemView: View {
         isAddingNewItem = false
         onItemAdded?()
     }
+    
     
 }
 

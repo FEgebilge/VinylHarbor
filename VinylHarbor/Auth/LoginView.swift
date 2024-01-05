@@ -74,7 +74,7 @@ struct LoginView: View {
                         .clipShape(Capsule())
                         .padding()
                 }
-                .shadow(color: .accentColor.opacity(0.5), radius: 10, x: 0, y: 0)
+                .shadow(color: .purple.opacity(0.5), radius: 10, x: 0, y: 0)
                 
                 
                 

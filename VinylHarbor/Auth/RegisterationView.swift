@@ -71,7 +71,7 @@ struct RegisterationView: View {
                     .clipShape(Capsule())
                     .padding(.top,10)
             }
-            .shadow(color: .accentColor.opacity(0.5), radius: 10, x: 0, y: 0)
+            .shadow(color: .purple.opacity(0.5), radius: 10, x: 0, y: 0)
             
             
             

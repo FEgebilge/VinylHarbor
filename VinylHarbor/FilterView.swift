@@ -24,51 +24,56 @@ struct FilterView: View {
         let CoverConditionOptions = ["All","M", "NM", "VG+", "VG","G+","G","F", "P"]
 
         var body: some View {
-            VStack(alignment: .leading, spacing: 2.0) {
+            VStack() {
                 Text("Sort by Price:")
                     .font(.headline)
+                    .foregroundStyle(Color.purple)
+                    .padding(10)
                 Picker("Sort Option", selection: $selectedSortOption) {
                     ForEach(0..<sortOptions.count, id: \.self) { index in
                         Text(sortOptions[index])
                     }
                 }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding()
-
-                Text("Vinyl Condition:")
-                    .font(.headline)
-                Picker("Condition Option", selection: $selectedVinylCondition) {
-                    ForEach(0..<VinylConditionOptions.count, id: \.self) { index in
-                        Text(VinylConditionOptions[index])
-                    }
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding()
+                .foregroundStyle(Color.purple)
+                .pickerStyle(PalettePickerStyle())
                 
+                    Text("Vinyl Condition:")
+                        .font(.headline)
+                        .foregroundStyle(Color.purple)
+                        .padding(10)
+                    Picker("Condition Option", selection: $selectedVinylCondition) {
+                        ForEach(0..<VinylConditionOptions.count, id: \.self) { index in
+                            Text(VinylConditionOptions[index])
+                        }
+                    }
+                    .foregroundStyle(Color.purple)
+                    .pickerStyle(InlinePickerStyle())
                 
                 Text("Cover Condition:")
                     .font(.headline)
+                    .foregroundStyle(Color.purple)
+                    .padding(10)
                 Picker("Condition Option", selection: $selectedCoverCondition) {
                     ForEach(0..<VinylConditionOptions.count, id: \.self) { index in
                         Text(VinylConditionOptions[index])
                     }
                 }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding()
-
+                .pickerStyle(InlinePickerStyle())
+                .foregroundStyle(Color.purple)
                 Button("Apply Filters") {
                     // Apply filters
                     // Close the filter view
                     applyFilters()
                     isFilterViewPresented.toggle()
                 }
-                .foregroundColor(.white)
+                .foregroundColor(.black)
                 .padding()
                 .background(Color.purple)
                 .cornerRadius(15)
              
             }
             .padding()
+            .background(Color.black)
         }
     func applyFilters() {
         var sortedVinyls = vinyls
