@@ -109,17 +109,19 @@ struct NewItemView: View {
                                             price = value // Update 'price' when the TextField value changes
                                         }
                                     }))
-                                    
-                                    
+                
                                     TextField("Description", text: $description)
+                                        
                                 }
+                                .listRowBackground(Color(.systemFill))
+                                .listRowSeparatorTint(Color.black)
+                                .tint(.purple)
+                                .foregroundStyle(.purple, .black)
                             }
                             .scrollContentBackground(.hidden)
                             .clipShape(RoundedRectangle(cornerRadius: 15))
-                            .foregroundStyle(Color.purple)
                             .navigationBarTitleDisplayMode(.large)
-                          //  .listRowBackground(Color.red)
-                            Spacer()
+                          
                           
                           
                
@@ -134,7 +136,7 @@ struct NewItemView: View {
             )
         }
         .onAppear(){
-            sellerID = userAuthManager.currentUser!.userID
+            sellerID = userAuthManager.currentUser?.userID ?? -1
             if condition.isEmpty{
                 condition=conditionOptions[0]
             }
@@ -146,7 +148,6 @@ struct NewItemView: View {
         .onDisappear(){
             SearchView().refreshVinyl()
         }
-        
     }
 
  
