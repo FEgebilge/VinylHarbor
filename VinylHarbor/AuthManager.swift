@@ -36,12 +36,13 @@ class UserAuthManager: ObservableObject {
            }
     }
     
-    func signIn(username: String, password: String) {
+    func signIn(username: String, password: String) -> Bool {
         guard let user = DatabaseManager.authenticateUser(username: username, password: password) else {
             print("Authentication failed")
-            return
+            return false
         }
         currentUser = user
+        return true
     }
     
     func signOut() {

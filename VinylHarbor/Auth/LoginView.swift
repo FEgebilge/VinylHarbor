@@ -11,6 +11,7 @@ struct LoginView: View {
     
     @State private var username=""
     @State private var password=""
+    @State private var showAlert = false
     //@EnvironmentObject var ViewModel:AuthViewModel
     
     
@@ -62,8 +63,12 @@ struct LoginView: View {
                 }
                 
                 Button {
-                    print("Sign in here")
-                    UserAuthManager.shared.signIn(username: username, password: password)
+                    let signInSuccess = UserAuthManager.shared.signIn(username: username, password: password)
+                                       if !signInSuccess {
+                                           showAlert = true
+                                       } else {
+                                           print("Signed In")
+                                       }
                     
                 } label: {
                     Text("Set Sail")
@@ -95,11 +100,20 @@ struct LoginView: View {
             }
             .navigationBarHidden(true)
             .ignoresSafeArea()
+            .alert(isPresented: $showAlert) {
+                           Alert(
+                               title: Text("Error"),
+                               message: Text("Invalid username or password"),
+                               dismissButton: .default(Text("OK")) {
+                                   // Optionally add code to handle the alert dismissal
+                                   showAlert = false
+                               }
+                           )
+            }
         }
     }
+    
 }
-
-
 #Preview {
     LoginView()
 }
