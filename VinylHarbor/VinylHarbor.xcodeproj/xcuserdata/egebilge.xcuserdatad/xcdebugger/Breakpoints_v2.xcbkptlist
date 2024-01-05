@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "F1A34DEA-5B67-483C-8533-B9C5410EC8DE"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EC3010A9-CBA4-4CCB-ACF0-2919CBBE647B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Model/DatabaseManager.swift"
+            startingColumnNumber = "13"
+            endingColumnNumber = "19"
+            startingLineNumber = "21"
+            endingLineNumber = "21"
+            landmarkName = "insertVinyl(title:artist:releaseDate:genre:condition:coverCondition:price:description:sellerID:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
