@@ -11,6 +11,7 @@ var dbPath="/Users/egebilge/Developer/VinylHarbor/VinylHarborSQLite.db"
 
 
 struct DatabaseManager {
+    
     // Define a connection to the SQLite database
     static let db = try! Connection(dbPath)
 
@@ -225,6 +226,100 @@ struct DatabaseManager {
             print("Error authenticating user: \(error)")
             return nil
         }
+    }
+    
+    static func getVinylsForSellerID(currentUserID: Int) -> [Vinyl] {
+        
+        var vinyls: [Vinyl] = []
+
+        do {
+            // Replace "path_to_your_database" with the actual path to your SQLite database file
+            let db = try Connection(dbPath)
+            
+            let vinylsTable = Table("Vinyl")
+            let vinylID = Expression<Int>("VinylID")
+            let title = Expression<String>("Title")
+            let artist = Expression<String>("Artist")
+            let releaseDate = Expression<Date>("ReleaseDate")
+            let genre = Expression<String>("Genre")
+            let condition = Expression<String>("Condition")
+            let coverCondition = Expression<String>("CoverCondition")
+            let price = Expression<Double>("Price")
+            let description = Expression<String>("Description")
+            let sellerID = Expression<Int>("SellerID")
+            let customerID = Expression<Int>("CustomerID")
+            // Define expressions for other columns
+
+            let filteredVinyls = vinylsTable.filter(currentUserID == sellerID )
+
+            for row in try db.prepare(filteredVinyls) {
+                let newVinyl = Vinyl(
+                    id: row[vinylID],
+                    Title: row[title],
+                    Artist: row[artist],
+                    ReleaseDate: row[releaseDate],
+                    Genre: row[genre],
+                    Condition: row[condition],
+                    CoverCondition: row[coverCondition],
+                    Price: row[price],
+                    Description: row[description],
+                    SellerID: row[sellerID],
+                    CustomerID: row[customerID]
+                )
+                vinyls.append(newVinyl)
+            }
+        } catch {
+            print("Error fetching vinyls: \(error)")
+        }
+
+        return vinyls
+    }
+    
+    static func getVinylsBought(currentUserID: Int) -> [Vinyl] {
+        
+        var vinyls: [Vinyl] = []
+
+        do {
+            // Replace "path_to_your_database" with the actual path to your SQLite database file
+            let db = try Connection(dbPath)
+            
+            let vinylsTable = Table("Vinyl")
+            let vinylID = Expression<Int>("VinylID")
+            let title = Expression<String>("Title")
+            let artist = Expression<String>("Artist")
+            let releaseDate = Expression<Date>("ReleaseDate")
+            let genre = Expression<String>("Genre")
+            let condition = Expression<String>("Condition")
+            let coverCondition = Expression<String>("CoverCondition")
+            let price = Expression<Double>("Price")
+            let description = Expression<String>("Description")
+            let sellerID = Expression<Int>("SellerID")
+            let customerID = Expression<Int>("CustomerID")
+            // Define expressions for other columns
+
+            let filteredVinyls = vinylsTable.filter(currentUserID == customerID )
+
+            for row in try db.prepare(filteredVinyls) {
+                let newVinyl = Vinyl(
+                    id: row[vinylID],
+                    Title: row[title],
+                    Artist: row[artist],
+                    ReleaseDate: row[releaseDate],
+                    Genre: row[genre],
+                    Condition: row[condition],
+                    CoverCondition: row[coverCondition],
+                    Price: row[price],
+                    Description: row[description],
+                    SellerID: row[sellerID],
+                    CustomerID: row[customerID]
+                )
+                vinyls.append(newVinyl)
+            }
+        } catch {
+            print("Error fetching vinyls: \(error)")
+        }
+
+        return vinyls
     }
     
     // Implement other database operations like querying, updating, deleting, etc.

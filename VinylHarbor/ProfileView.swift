@@ -16,17 +16,22 @@ struct ProfileView: View {
     @Namespace var animation
     @EnvironmentObject var userAuthManager: UserAuthManager
     
-    
+    @State private var vinylsOnSell: [Vinyl] = []
+    @State private var vinylsBought: [Vinyl] = []
     
     var body: some View {
             VStack(alignment:.leading){
                 headerView
                 actionButtons
                 userInfoDetails
-                tweetFilterBar
-                tweetsInProfileView
+                vinylFilterBar
+                vinylsInProfileView
         
                 Spacer()
+            }
+            .onAppear{
+                vinylsOnSell = DatabaseManager.getVinylsForSellerID(currentUserID: userAuthManager.currentUser!.userID)
+                vinylsBought = DatabaseManager.getVinylsBought(currentUserID: userAuthManager.currentUser!.userID)
             }
         }
     }
@@ -37,6 +42,15 @@ struct ProfileView: View {
 }
 
 extension ProfileView{
+    
+    func getDataForSelectedFilter() -> [Vinyl] {
+           switch selectedFilter {
+           case .onSell:
+               return vinylsOnSell
+           case .buys:
+               return vinylsBought
+           }
+       }
 
     var headerView: some View{
         if let currentUser = userAuthManager.currentUser  {
@@ -125,7 +139,7 @@ extension ProfileView{
     
     
     
-    var tweetFilterBar :some View {
+    var vinylFilterBar :some View {
         
         HStack{
             ForEach(ProfileFilterViewModel.allCases, id: \.rawValue) { item in
@@ -161,14 +175,15 @@ extension ProfileView{
     }
     
     
-    var tweetsInProfileView : some View{
+    var vinylsInProfileView : some View{
         ScrollView{
             LazyVStack{
-                ForEach(0...6, id: \.self){ _ in
-                    VinylRowView()
+                ForEach(getDataForSelectedFilter(), id: \.id){ dataItem in
+                    ItemRowView(vinyl: dataItem)
                 }
             }
         }
     }
     
 }
+

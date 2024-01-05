@@ -9,6 +9,7 @@ import SwiftUI
 
 struct NewItemView: View {
     
+    @EnvironmentObject var userAuthManager: UserAuthManager
     @State private var showAlert = false
     @State private var alertMessage = ""
     
@@ -26,6 +27,7 @@ struct NewItemView: View {
     @State private var isItemAdding = false
 
     
+    
     let conditionOptions = ["M", "NM", "VG+", "VG","G+","G","F", "P"]
     let coverConditionOptions = ["M", "NM", "VG+", "VG","G+","G","F", "P"]
     
@@ -33,8 +35,6 @@ struct NewItemView: View {
     
     @Environment (\.dismiss) var dismiss
     var body: some View {
-        
-      
         
         /*NavigationLink(destination: SearchView(), isActive: $isAddingNewItem) {
                 EmptyView()
@@ -133,6 +133,7 @@ struct NewItemView: View {
             )
         }
         .onAppear(){
+            sellerID = userAuthManager.currentUser!.userID
             if condition.isEmpty{
                 condition=conditionOptions[0]
             }

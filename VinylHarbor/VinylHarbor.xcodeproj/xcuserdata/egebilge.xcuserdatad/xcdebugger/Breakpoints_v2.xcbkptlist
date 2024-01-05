@@ -14,8 +14,8 @@
             filePath = "Model/DatabaseManager.swift"
             startingColumnNumber = "13"
             endingColumnNumber = "13"
-            startingLineNumber = "22"
-            endingLineNumber = "22"
+            startingLineNumber = "23"
+            endingLineNumber = "23"
             landmarkName = "insertVinyl(title:artist:releaseDate:genre:condition:coverCondition:price:description:sellerID:)"
             landmarkType = "7">
          </BreakpointContent>
