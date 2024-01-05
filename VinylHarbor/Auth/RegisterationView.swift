@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RegisterationView: View {
     
+    
     @Environment(\.dismiss) var dismiss
     @State private var username=""
     @State private var name=""
@@ -60,9 +61,7 @@ struct RegisterationView: View {
             
             
             Button {
-                print("Sign up here")
-                DatabaseManager.createUser(username: username, name:name, email: email, phone: phone, billingAddress: billingAddress, shippingAddress: shippingAddress, location: location, bookmarkedVinyls: [], sellerRating: 0, customerRating: 0, description: descrtiption, password: password)
-                dismiss()
+                registerUser()
             } label: {
                 Text("Set Sail")
                     .font(.headline)
@@ -95,8 +94,26 @@ struct RegisterationView: View {
         }
         .ignoresSafeArea()
     }
+    func registerUser(){
+        guard   !username.isEmpty,
+                !name.isEmpty,
+                !email.isEmpty,
+                !phone.isEmpty,
+                !billingAddress.isEmpty,
+                !shippingAddress.isEmpty,
+                !location.isEmpty,
+                !password.isEmpty
+                else {
+              // Show an alert or perform some action to notify the user about empty fields
+              return
+          }
+        DatabaseManager.createUser(username: username, name: name, email: email, phone: phone, billingAddress: billingAddress, shippingAddress: shippingAddress, location: location, bookmarkedVinyls: [], sellerRating: 0 , customerRating: 0, description: descrtiption, password: password)
+        print("User added to database")
+        dismiss()
 }
 
+
+}
 #Preview {
     RegisterationView()
 }

@@ -7,25 +7,27 @@
 
 import SwiftUI
 
+
 struct ProfileView: View {
     @State private var selectedFilter:ProfileFilterViewModel = .sells
     @Environment (\.dismiss) var mode
     @Namespace var animation
+    @EnvironmentObject var userAuthManager: UserAuthManager
     
     var body: some View {
-        VStack(alignment:.leading){
-            
-            headerView
-            actionButtons
-            userInfoDetails
-            tweetFilterBar
-            tweetsInProfileView
-          
-         
-            Spacer()
+            VStack(alignment:.leading){
+                headerView
+                actionButtons
+                userInfoDetails
+                tweetFilterBar
+                tweetsInProfileView
+                
+                
+                Spacer()
+            }
         }
     }
-}
+
 
 #Preview {
     ProfileView()
@@ -53,18 +55,13 @@ extension ProfileView{
         
         HStack(spacing:12){
             Spacer()
-            Image(systemName: "bell.badge")
-                .font(.title3)
-                .padding(6)
-                .overlay(Circle().stroke(Color.gray,lineWidth: 0.75))
-            
             Button {
                 print("sign out clicked")
                 UserAuthManager.shared.signOut()
             } label: {
                 Text("Sign Out")
                     .font(.subheadline).bold()
-                    .foregroundColor(.black)
+                    .foregroundColor(.purple)
                     .frame(width:120,height: 30)
                     .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.gray,lineWidth:0.75))
                 
@@ -75,45 +72,53 @@ extension ProfileView{
         
         
     }
-    
-    var userInfoDetails:some View{
-        VStack(alignment: .leading, spacing: 4){
-            HStack {
-                Text("MadmanOfCity")
-                    .font(.title3).bold()
-                
-            }
-            
-            Text("@madman")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            
-            Text("Madman of the city was here!")
-                .font(.subheadline)
-                .padding(.vertical,7)
-            
-    
-            .font(.caption)
-            .foregroundColor(.secondary)
-            HStack {
-                HStack(spacing:20){
-                    HStack{
-                        Image(systemName: "mappin.and.ellipse")
-                        Text("Gotham City")
-                            .font(/*@START_MENU_TOKEN@*/.callout/*@END_MENU_TOKEN@*/)
-                    }
-                
+    var userInfoDetails: some View{
+        if let currentUser = userAuthManager.currentUser  {
+            return AnyView(
+            VStack(alignment: .leading, spacing: 4){
+                HStack {
+                    Text(currentUser.username)
+                        .font(.title3).bold()
+                    
                 }
-                Spacer()
-                UserStatsView()
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
                 
+                Text(currentUser.name)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
                 
+                Text(currentUser.description)
+                    .font(.subheadline)
+                    .padding(.vertical,7)
+                
+        
+                .font(.caption)
+                .foregroundColor(.secondary)
+                HStack {
+                    HStack(spacing:20){
+                        HStack{
+                            Image(systemName: "mappin.and.ellipse")
+                            Text("Gotham City")
+                                .font(.callout)
+                        }
+                    
+                    }
+                    Spacer()
+                    UserStatsView()
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
+                    
+                    
+                }
+               
             }
-           
+            .padding(.horizontal))
         }
-        .padding(.horizontal)
+        else{
+            return AnyView(
+            Text("No user logged in")
+            )
+        }
     }
+    
     
     
     var tweetFilterBar :some View {

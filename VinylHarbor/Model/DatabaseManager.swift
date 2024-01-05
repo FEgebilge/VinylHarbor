@@ -129,6 +129,8 @@ struct DatabaseManager {
           let passwordExp = Expression<String>("Password")
 
           do {
+              let bookmarkedVinylsString = try JSONSerialization.data(withJSONObject: bookmarkedVinyls, options: [])
+                      let bookmarkedVinylsEncoded = String(data: bookmarkedVinylsString, encoding: .utf8) ?? ""
               try db.run(users.insert(
                   usernameExp <- username,
                   nameExp <- name,
@@ -137,7 +139,7 @@ struct DatabaseManager {
                   billingAddressExp <- billingAddress,
                   shippingAddressExp <- shippingAddress,
                   locationExp <- location,
-                  bookmarkedVinylsExp <- bookmarkedVinyls.map(String.init).joined(separator: ","),
+                  bookmarkedVinylsExp <- bookmarkedVinylsEncoded,
                   sellerRatingExp <- sellerRating,
                   customerRatingExp <- customerRating,
                   descriptionExp <- description,
@@ -154,11 +156,31 @@ struct DatabaseManager {
     struct User: Codable {
         var userID: Int
         var username: String
+        var name:String
+        var email:String
+        var phone: String
+        var billingAddress: String
+        var shippingAddress: String
+        var location: String
+        var bookmarkedVinyls: [Int]
+        var sellerRating: Double
+        var customerRating: Double
+        var description: String
         // ... other user properties
         
         enum CodingKeys:String, CodingKey{
             case userID = "UserID"
             case username = "Username"
+            case name = "Name"
+            case email = "Email"
+            case phone = "Phone"
+            case billingAddress = "BillingAddress"
+            case shippingAddress = "ShippingAddress"
+            case location = "Location"
+            case bookmarkedVinyls = "BookmarkedVinyls"
+            case sellerRating = "SellerRating"
+            case customerRating = "CustomerRating"
+            case description = "Description"
         }
     }
 
@@ -166,20 +188,34 @@ struct DatabaseManager {
         let users = Table("User")
         let userIDColumn = Expression<Int>("UserID")
         let usernameColumn = Expression<String>("Username")
+        let nameColumn = Expression<String>("Name")
+        let emailColumn = Expression<String>("Email")
+        let phoneColumn = Expression<String>("Phone")
+        let billingAddressColumn = Expression<String>("BillingAddress")
+        let shippingAddressColumn = Expression<String>("ShippingAddress")
+        let locationColumn = Expression<String>("Location")
+        let bookmarkedVinylsColumn = Expression<String>("BookmarkedVinyls") // Stored as a String or JSON format
+        let sellerRatingColumn = Expression<Double>("SellerRating")
+        let customerRatingColumn = Expression<Double>("CustomerRating")
+        let descriptionColumn = Expression<String>("Description")
         let passwordColumn = Expression<String>("Password")
 
-        // Construct the query to check for the given username and password
+        
         let query = users.filter(usernameColumn == username && passwordColumn == password)
 
         do {
-            // Execute the query and fetch the result
+          
             if let userRow = try db.pluck(query) {
-                // Extract user data and return the User object
-                let user = User(userID: userRow[userIDColumn], username: userRow[usernameColumn])
-                // Populate other user properties as needed
+                
+                let bookmarkedVinylsString = userRow[bookmarkedVinylsColumn]
+                let bookmarkedVinylsData = bookmarkedVinylsString.data(using: .utf8) ?? Data()
+                let bookmarkedVinylsArray = try JSONDecoder().decode([Int].self, from: bookmarkedVinylsData)
+                
+                let user = User(userID:  userRow[userIDColumn], username: userRow[usernameColumn], name: userRow[nameColumn], email: userRow[emailColumn], phone: userRow[phoneColumn], billingAddress: userRow[billingAddressColumn], shippingAddress: userRow[shippingAddressColumn], location: userRow[locationColumn], bookmarkedVinyls:bookmarkedVinylsArray, sellerRating: userRow[sellerRatingColumn], customerRating: userRow[customerRatingColumn], description: userRow[descriptionColumn])
                 return user
+                
             } else {
-                // Authentication failed (no matching user)
+                // Authentication failed
                 print("Username or password is wrong")
                 return nil
             }

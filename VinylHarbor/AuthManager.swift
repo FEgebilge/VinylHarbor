@@ -23,12 +23,17 @@ class UserAuthManager: ObservableObject {
 
     init() {
         // Retrieve user's signed-in state from UserDefaults when UserAuthManager is initialized
-        if let savedUser = UserDefaults.standard.data(forKey: "currentUser"),
-           let loadedUser = try? JSONDecoder().decode(DatabaseManager.User.self, from: savedUser) {
-            currentUser = loadedUser
-        } else {
-            currentUser = nil
-        }
+           if let savedUser = UserDefaults.standard.data(forKey: "currentUser") {
+               do {
+                   let loadedUser = try JSONDecoder().decode(DatabaseManager.User.self, from: savedUser)
+                   currentUser = loadedUser
+               } catch {
+                   print("Error decoding user data:", error)
+                   currentUser = nil
+               }
+           } else {
+               currentUser = nil
+           }
     }
     
     func signIn(username: String, password: String) {

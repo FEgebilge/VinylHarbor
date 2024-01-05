@@ -117,8 +117,9 @@
 				63181B162B444D490018C9F4 /* Model */,
 				633C184D2B4304FE005F4710 /* TransactionView.swift */,
 				63CB030C2B47F1B600C907B5 /* Components */,
-				630F29762B3F391C004B96E2 /* NewItemView.swift */,
 				638F51332B402F8500684845 /* FilterView.swift */,
+				63C5D6FB2B3F69D1008368AD /* ProfileView.swift */,
+				630F29762B3F391C004B96E2 /* NewItemView.swift */,
 				63C5D6F72B3F6946008368AD /* SearchView.swift */,
 				630F29702B3F3836004B96E2 /* MainTabView.swift */,
 				630F29452B3F37FE004B96E2 /* VinylHarbor */,
@@ -197,7 +198,6 @@
 		63CB030C2B47F1B600C907B5 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				63C5D6FB2B3F69D1008368AD /* ProfileView.swift */,
 				630F29742B3F38C6004B96E2 /* ItemRowView.swift */,
 				63C5D7012B3F7A23008368AD /* ItemFullView.swift */,
 				630F29782B3F3958004B96E2 /* TextArea.swift */,
