@@ -322,6 +322,25 @@ struct DatabaseManager {
         return vinyls
     }
     
+    static func deleteVinylRecord(deleteID: Int) throws {
+        let vinyls = Table("Vinyl")
+        let vinylID = Expression<Int>("VinylID")
+        print(vinylID)
+        let recordToDelete = vinyls.filter(vinylID == deleteID)
+        
+        do {
+            let db = try Connection(dbPath)
+            let deletedRows = try db.run(recordToDelete.delete())
+            
+            // Print the number of deleted rows for confirmation
+            print("Deleted \(deletedRows) rows")
+        } catch {
+            // Print the error description if an error occurs
+            print("Error deleting record: \(error.localizedDescription)")
+            throw error
+        }
+    }
+
     // Implement other database operations like querying, updating, deleting, etc.
 }
 

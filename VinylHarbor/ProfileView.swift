@@ -20,23 +20,23 @@ struct ProfileView: View {
     @State private var vinylsBought: [Vinyl] = []
     
     var body: some View {
-            VStack(alignment:.leading){
-                headerView
-                actionButtons
-                userInfoDetails
-                vinylFilterBar
-                vinylsInProfileView
-        
-                Spacer()
-            }
-            .background(Color.black)
-            .foregroundStyle(Color.white)
-            .onAppear{
-                vinylsOnSell = DatabaseManager.getVinylsForSellerID(currentUserID: userAuthManager.currentUser!.userID)
-                vinylsBought = DatabaseManager.getVinylsBought(currentUserID: userAuthManager.currentUser!.userID)
-            }
+        VStack(alignment:.leading){
+            headerView
+            actionButtons
+            userInfoDetails
+            vinylFilterBar
+            vinylsInProfileView
+            
+            Spacer()
+        }
+        .background(Color.black)
+        .foregroundStyle(Color.white)
+        .onAppear{
+            vinylsOnSell = DatabaseManager.getVinylsForSellerID(currentUserID: userAuthManager.currentUser!.userID)
+            vinylsBought = DatabaseManager.getVinylsBought(currentUserID: userAuthManager.currentUser!.userID)
         }
     }
+}
 
 
 #Preview {
@@ -46,38 +46,38 @@ struct ProfileView: View {
 extension ProfileView{
     
     func getDataForSelectedFilter() -> [Vinyl] {
-           switch selectedFilter {
-           case .onSell:
-               return vinylsOnSell
-           case .buys:
-               return vinylsBought
-           }
-       }
-
+        switch selectedFilter {
+        case .onSell:
+            return vinylsOnSell
+        case .buys:
+            return vinylsBought
+        }
+    }
+    
     var headerView: some View{
         if let currentUser = userAuthManager.currentUser  {
             return AnyView(
-            ZStack(alignment:.bottomLeading){
-                
-                Color(.purple)
-                    .ignoresSafeArea()
-                
-                VStack {
+                ZStack(alignment:.bottomLeading){
+                    
+                    Color(.purple)
+                        .ignoresSafeArea()
+                    
+                    VStack {
                         Text(currentUser.username)
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .bold()
-                        .padding()
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .bold()
+                            .padding()
+                    }
                 }
-            }
-            .frame(height:100))
-            }
-            else{
-                return AnyView(
-                Text("No user logged in")
-                )
-            }
+                    .frame(height:100))
         }
+        else{
+            return AnyView(
+                Text("No user logged in")
+            )
+        }
+    }
     
     
     var actionButtons:some View{
@@ -104,37 +104,37 @@ extension ProfileView{
     var userInfoDetails: some View{
         if let currentUser = userAuthManager.currentUser  {
             return AnyView(
-            VStack(alignment: .leading, spacing: 4){
-                Text(currentUser.name)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                
-                Text(currentUser.description)
-                    .font(.subheadline)
-                    .padding(.vertical,7)
-                .font(.caption)
-                .foregroundColor(.secondary)
-                HStack {
-                    HStack(spacing:20){
-                        HStack{
-                            Image(systemName: "mappin.and.ellipse")
-                            Text(currentUser.location)
-                                .font(.callout)
-                        }
+                VStack(alignment: .leading, spacing: 4){
+                    Text(currentUser.name)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                     
-                    }
-                    Spacer()
-                    UserStatsView()
+                    Text(currentUser.description)
+                        .font(.subheadline)
+                        .padding(.vertical,7)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    HStack {
+                        HStack(spacing:20){
+                            HStack{
+                                Image(systemName: "mappin.and.ellipse")
+                                Text(currentUser.location)
+                                    .font(.callout)
+                            }
+                            
+                        }
+                        Spacer()
+                        UserStatsView()
                         
+                        
+                    }
                     
                 }
-               
-            }
-            .padding(.horizontal))
+                    .padding(.horizontal))
         }
         else{
             return AnyView(
-            Text("No user logged in")
+                Text("No user logged in")
             )
         }
     }
@@ -177,13 +177,36 @@ extension ProfileView{
     }
     
     
-    var vinylsInProfileView : some View{
-        ScrollView{
-            LazyVStack{
-                ForEach(getDataForSelectedFilter(), id: \.id){ dataItem in
+    var vinylsInProfileView : some View {
+        List {
+            ForEach(getDataForSelectedFilter(), id: \.id) { dataItem in
+                if selectedFilter == .onSell {
                     ItemRowView(vinyl: dataItem)
                 }
             }
+            .onDelete { indices in
+                // Perform deletion for items selected by swipe or EditButton
+                let vinylsToDelete = indices.map { getDataForSelectedFilter()[$0] }
+                for vinyl in vinylsToDelete {
+                    deleteVinyl(vinyl: vinyl)
+                }
+            }
+        }
+        .listStyle(.plain)
+    }
+
+    func deleteVinyl(vinyl: Vinyl) {
+        // Your logic to delete the vinyl from the "On Sell" records goes here
+        // For example, if you have an array of vinylsOnSell:
+        if let index = vinylsOnSell.firstIndex(where: { $0.id == vinyl.id }) {
+            vinylsOnSell.remove(at: index)
+            do {
+                print(vinyl.id)
+                try DatabaseManager.deleteVinylRecord(deleteID: vinyl.id)
+            } catch {
+                print("Error deleting vinyl: \(error)")
+            }
+
         }
     }
     
