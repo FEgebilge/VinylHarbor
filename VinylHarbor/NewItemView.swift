@@ -118,6 +118,7 @@ struct NewItemView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 15))
                             .foregroundStyle(Color.purple)
                             .navigationBarTitleDisplayMode(.large)
+                          //  .listRowBackground(Color.red)
                             Spacer()
                           
                           

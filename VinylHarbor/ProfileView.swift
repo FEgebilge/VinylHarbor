@@ -29,6 +29,8 @@ struct ProfileView: View {
         
                 Spacer()
             }
+            .background(Color.black)
+            .foregroundStyle(Color.white)
             .onAppear{
                 vinylsOnSell = DatabaseManager.getVinylsForSellerID(currentUserID: userAuthManager.currentUser!.userID)
                 vinylsBought = DatabaseManager.getVinylsBought(currentUserID: userAuthManager.currentUser!.userID)

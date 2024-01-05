@@ -15,8 +15,18 @@ struct ItemRowView: View {
             
             HStack(alignment: .top, spacing: 12){
                 
-                Circle()
-                    .frame(width:56,height: 56)
+                if let imageURL = Bundle.main.url(forResource: "vinyl", withExtension: "png"){
+                    Image(uiImage: UIImage(contentsOfFile: imageURL.path(percentEncoded: false)) ?? UIImage())
+                             .resizable()
+                             .clipShape(Circle())
+                             .aspectRatio(contentMode: .fit)
+                             .frame(width:85,height: 85)
+                             .padding(.top, 10)
+                             // Other modifiers if needed
+                     } else {
+                         Text("Image not found")
+                     }
+                    
                 
                 VStack(alignment:.leading,spacing: 3){
                     
