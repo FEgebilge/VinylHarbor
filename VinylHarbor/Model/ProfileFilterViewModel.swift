@@ -11,12 +11,12 @@ import Foundation
 
 enum ProfileFilterViewModel: Int,CaseIterable{
     
-    case sells
+    case onSell
     case buys
     
     var title : String{
         switch self{
-        case .sells:return "Sold"
+        case .onSell:return "On Sell"
         case.buys:return "Bought"
         }
     }

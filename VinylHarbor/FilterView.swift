@@ -28,7 +28,6 @@ struct FilterView: View {
                 Text("Sort by Price:")
                     .font(.headline)
                     .foregroundStyle(Color.purple)
-                    .padding(10)
                 Picker("Sort Option", selection: $selectedSortOption) {
                     ForEach(0..<sortOptions.count, id: \.self) { index in
                         Text(sortOptions[index])
@@ -36,11 +35,10 @@ struct FilterView: View {
                 }
                 .foregroundStyle(Color.purple)
                 .pickerStyle(PalettePickerStyle())
-                
+                .padding(20)
                     Text("Vinyl Condition:")
                         .font(.headline)
                         .foregroundStyle(Color.purple)
-                        .padding(10)
                     Picker("Condition Option", selection: $selectedVinylCondition) {
                         ForEach(0..<VinylConditionOptions.count, id: \.self) { index in
                             Text(VinylConditionOptions[index])
@@ -48,16 +46,17 @@ struct FilterView: View {
                     }
                     .foregroundStyle(Color.purple)
                     .pickerStyle(InlinePickerStyle())
-                
+                    .padding(10)
                 Text("Cover Condition:")
                     .font(.headline)
                     .foregroundStyle(Color.purple)
-                    .padding(10)
+                   
                 Picker("Condition Option", selection: $selectedCoverCondition) {
                     ForEach(0..<VinylConditionOptions.count, id: \.self) { index in
                         Text(VinylConditionOptions[index])
                     }
                 }
+                
                 .pickerStyle(InlinePickerStyle())
                 .foregroundStyle(Color.purple)
                 Button("Apply Filters") {
@@ -70,11 +69,14 @@ struct FilterView: View {
                 .padding()
                 .background(Color.purple)
                 .cornerRadius(15)
-             
+                .padding(15)
             }
-            .padding()
-            .background(Color.black)
+            .padding(20)
+            .background(Color.black, ignoresSafeAreaEdges: .all)
+            
+            
         }
+        
     func applyFilters() {
         var sortedVinyls = vinyls
         var filteredVinyls = vinyls

@@ -11,7 +11,7 @@ import SwiftUI
 struct ProfileView: View {
     
     
-    @State private var selectedFilter:ProfileFilterViewModel = .sells
+    @State private var selectedFilter:ProfileFilterViewModel = .onSell
     @Environment (\.dismiss) var mode
     @Namespace var animation
     @EnvironmentObject var userAuthManager: UserAuthManager
@@ -107,8 +107,9 @@ extension ProfileView{
                         }
                     
                     }
+                    Spacer()
                     UserStatsView()
-                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
+                        
                     
                 }
                
@@ -132,7 +133,7 @@ extension ProfileView{
                     Text(item.title)
                         .font(.subheadline)
                         .fontWeight(selectedFilter == item ? .semibold: .regular)
-                        .foregroundColor(selectedFilter == item ? .black :.secondary)
+                        .foregroundColor(selectedFilter == item ? .purple :.secondary)
                     if selectedFilter==item{
                         Capsule()
                             .foregroundColor(.purple)

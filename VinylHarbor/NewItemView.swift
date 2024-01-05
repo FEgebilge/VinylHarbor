@@ -132,6 +132,14 @@ struct NewItemView: View {
                 dismissButton: .default(Text("OK"))
             )
         }
+        .onAppear(){
+            if condition.isEmpty{
+                condition=conditionOptions[0]
+            }
+            if coverCondition.isEmpty{
+                coverCondition=coverConditionOptions[0]
+            }
+        }
 
         .onDisappear(){
             SearchView().refreshVinyl()
