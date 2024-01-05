@@ -8,21 +8,30 @@
 import SwiftUI
 
 struct UserStatsView: View {
-    var body: some View {
-        HStack(spacing:20){
-            HStack(spacing:4){
-                Text("SR").font(.caption)
-                    .foregroundColor(.secondary)
-                Text("9.2").bold().font(.subheadline)
+    
+    @EnvironmentObject var userAuthManager: UserAuthManager
+    
+    
+    var body: some View{
+        if let currentUser = userAuthManager.currentUser{
+            HStack(spacing:20){
+                HStack(spacing:4){
+                    Text("Seller Rating").font(.caption)
+                        .foregroundColor(.secondary)
+                    Text(String(currentUser.sellerRating)).bold().font(.subheadline)
+                }
+                
+                HStack(spacing:4){
+                    Text("Customer Rating").font(.caption)
+                        .foregroundColor(.secondary)
+                    Text(String(currentUser.customerRating)).bold().font(.subheadline)
+                }
             }
-            
-            HStack(spacing:4){
-                Text("CR").font(.caption)
-                    .foregroundColor(.secondary)
-                Text("9.8").bold().font(.subheadline)
-            }
+            .padding(.vertical,10)
         }
-        .padding(.vertical,10)
+        else{
+            Text("No user signed in")
+        }
     }
 }
 

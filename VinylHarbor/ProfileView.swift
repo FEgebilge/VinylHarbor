@@ -9,10 +9,14 @@ import SwiftUI
 
 
 struct ProfileView: View {
+    
+    
     @State private var selectedFilter:ProfileFilterViewModel = .sells
     @Environment (\.dismiss) var mode
     @Namespace var animation
     @EnvironmentObject var userAuthManager: UserAuthManager
+    
+    
     
     var body: some View {
             VStack(alignment:.leading){
@@ -21,8 +25,7 @@ struct ProfileView: View {
                 userInfoDetails
                 tweetFilterBar
                 tweetsInProfileView
-                
-                
+        
                 Spacer()
             }
         }
@@ -36,18 +39,28 @@ struct ProfileView: View {
 extension ProfileView{
 
     var headerView: some View{
+        if let currentUser = userAuthManager.currentUser  {
+            return AnyView(
             ZStack(alignment:.bottomLeading){
                 
                 Color(.purple)
                     .ignoresSafeArea()
                 
                 VStack {
-                    Circle()
-                        .frame(width: 100, height: 100)
-                        .offset(x: 20, y: 25)
+                        Text(currentUser.username)
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .bold()
+                        .padding()
                 }
             }
-            .frame(height:100)
+            .frame(height:100))
+            }
+            else{
+                return AnyView(
+                Text("No user logged in")
+                )
+            }
         }
     
     
@@ -76,12 +89,6 @@ extension ProfileView{
         if let currentUser = userAuthManager.currentUser  {
             return AnyView(
             VStack(alignment: .leading, spacing: 4){
-                HStack {
-                    Text(currentUser.username)
-                        .font(.title3).bold()
-                    
-                }
-                
                 Text(currentUser.name)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
@@ -89,23 +96,20 @@ extension ProfileView{
                 Text(currentUser.description)
                     .font(.subheadline)
                     .padding(.vertical,7)
-                
-        
                 .font(.caption)
                 .foregroundColor(.secondary)
+                Spacer()
                 HStack {
                     HStack(spacing:20){
                         HStack{
                             Image(systemName: "mappin.and.ellipse")
-                            Text("Gotham City")
+                            Text(currentUser.location)
                                 .font(.callout)
                         }
                     
                     }
-                    Spacer()
                     UserStatsView()
                         .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
-                    
                     
                 }
                
