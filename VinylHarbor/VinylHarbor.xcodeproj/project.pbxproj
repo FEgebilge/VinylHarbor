@@ -33,6 +33,7 @@
 		63CB03082B47EFA900C907B5 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CB03072B47EFA900C907B5 /* LoginView.swift */; };
 		63CB030A2B47EFE400C907B5 /* SignTextFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CB03092B47EFE400C907B5 /* SignTextFields.swift */; };
 		63CB03102B47F5B400C907B5 /* RegisterationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CB030F2B47F5B400C907B5 /* RegisterationView.swift */; };
+		63CB03122B4802F500C907B5 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CB03112B4802F500C907B5 /* AuthManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,7 @@
 		63CB03072B47EFA900C907B5 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		63CB03092B47EFE400C907B5 /* SignTextFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignTextFields.swift; sourceTree = "<group>"; };
 		63CB030F2B47F5B400C907B5 /* RegisterationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterationView.swift; sourceTree = "<group>"; };
+		63CB03112B4802F500C907B5 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 		630F293A2B3F37FE004B96E2 = {
 			isa = PBXGroup;
 			children = (
+				63CB03112B4802F500C907B5 /* AuthManager.swift */,
 				63CB030B2B47F18200C907B5 /* Auth */,
 				63181B162B444D490018C9F4 /* Model */,
 				633C184D2B4304FE005F4710 /* TransactionView.swift */,
@@ -344,6 +347,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63181B152B444CB90018C9F4 /* DatabaseManager.swift in Sources */,
+				63CB03122B4802F500C907B5 /* AuthManager.swift in Sources */,
 				638F51342B402F8500684845 /* FilterView.swift in Sources */,
 				630F29772B3F391C004B96E2 /* NewItemView.swift in Sources */,
 				633C184E2B4304FE005F4710 /* TransactionView.swift in Sources */,

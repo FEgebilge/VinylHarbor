@@ -9,6 +9,7 @@ import Foundation
 import SQLite
 var dbPath="/Users/egebilge/Developer/VinylHarbor/VinylHarborSQLite.db"
 
+
 struct DatabaseManager {
     // Define a connection to the SQLite database
     static let db = try! Connection(dbPath)
@@ -112,7 +113,7 @@ struct DatabaseManager {
                              description: String,
                              password: String) {
 
-          let users = Table("Users")
+          let users = Table("User")
           let userID = Expression<Int64>("UserID")
           let usernameExp = Expression<String>("Username")
           let nameExp = Expression<String>("Name")
@@ -149,12 +150,45 @@ struct DatabaseManager {
       }
         
 
-       /* static func authenticateUser(username: String, password: String) -> Bool {
-            // Check if user credentials exist in the database
-            // Return true if authentication succeeds, false otherwise
+ 
+    struct User: Codable {
+        var userID: Int
+        var username: String
+        // ... other user properties
+        
+        enum CodingKeys:String, CodingKey{
+            case userID = "UserID"
+            case username = "Username"
         }
-    */
-    
+    }
+
+    static func authenticateUser(username: String, password: String) -> User? {
+        let users = Table("User")
+        let userIDColumn = Expression<Int>("UserID")
+        let usernameColumn = Expression<String>("Username")
+        let passwordColumn = Expression<String>("Password")
+
+        // Construct the query to check for the given username and password
+        let query = users.filter(usernameColumn == username && passwordColumn == password)
+
+        do {
+            // Execute the query and fetch the result
+            if let userRow = try db.pluck(query) {
+                // Extract user data and return the User object
+                let user = User(userID: userRow[userIDColumn], username: userRow[usernameColumn])
+                // Populate other user properties as needed
+                return user
+            } else {
+                // Authentication failed (no matching user)
+                print("Username or password is wrong")
+                return nil
+            }
+        } catch {
+            // Handle any potential errors
+            print("Error authenticating user: \(error)")
+            return nil
+        }
+    }
     
     // Implement other database operations like querying, updating, deleting, etc.
 }

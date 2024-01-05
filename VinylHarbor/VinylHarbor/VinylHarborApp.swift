@@ -10,9 +10,12 @@ import SwiftUI
 @main
 struct VinylHarborApp: App {
     
+    @StateObject var authManager = UserAuthManager.shared
+    
     var body: some Scene {
         WindowGroup {
-            MainTabView()
+         ContentView()
+                .environmentObject(authManager)
         }
     }
 }

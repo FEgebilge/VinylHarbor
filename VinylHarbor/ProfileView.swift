@@ -59,9 +59,10 @@ extension ProfileView{
                 .overlay(Circle().stroke(Color.gray,lineWidth: 0.75))
             
             Button {
-                //action
+                print("sign out clicked")
+                UserAuthManager.shared.signOut()
             } label: {
-                Text("Edit Profile")
+                Text("Sign Out")
                     .font(.subheadline).bold()
                     .foregroundColor(.black)
                     .frame(width:120,height: 30)

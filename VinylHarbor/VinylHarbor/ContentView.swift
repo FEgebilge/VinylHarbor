@@ -8,13 +8,25 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @EnvironmentObject var authManager: UserAuthManager
+    
+    
     var body: some View {
-        NavigationView {
-            LoginView()
-                .navigationBarHidden(true)
+            if authManager.currentUser == nil{
+                LoginView()
+                    .environmentObject(authManager)
+            }else{
+                NavigationView {
+                    MainTabView()
+                        .environmentObject(authManager)
+                       
+                }
+            }
         }
+        
     }
-}
+
 /*
  Group{
     if ViewModel.userSession == nil{

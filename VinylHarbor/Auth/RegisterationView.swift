@@ -62,14 +62,15 @@ struct RegisterationView: View {
             Button {
                 print("Sign up here")
                 DatabaseManager.createUser(username: username, name:name, email: email, phone: phone, billingAddress: billingAddress, shippingAddress: shippingAddress, location: location, bookmarkedVinyls: [], sellerRating: 0, customerRating: 0, description: descrtiption, password: password)
+                dismiss()
             } label: {
                 Text("Set Sail")
                     .font(.headline)
-                    .frame(width: 340, height: 50)
+                    .frame(width: 150, height: 40)
                     .foregroundColor(.purple)
                     .background(Color.black)
                     .clipShape(Capsule())
-                    .padding()
+                    .padding(.top,10)
             }
             .shadow(color: .accentColor.opacity(0.5), radius: 10, x: 0, y: 0)
             
@@ -82,7 +83,7 @@ struct RegisterationView: View {
             } label: {
                 HStack {
                     Text("Already have an account?")
-                        .foregroundColor(.black)
+                        .foregroundColor(.purple)
                         .font(.footnote)
                     
                     Text("Sign in")
