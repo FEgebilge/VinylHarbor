@@ -11,37 +11,75 @@ struct ItemFullView: View {
     let vinyl: Vinyl // Vinyl object to display details
     @Environment(\.presentationMode) var presentationMode
     @State private var showingTransactionView = false
+    
+    let gradient = LinearGradient(
+        gradient: Gradient(colors: [Color.black,Color.black, Color.purple]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
     var body: some View {
-        Section {
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Title: \(vinyl.Title)")
-                Text("Artist: \(vinyl.Artist)")
+        ScrollView {
+            VStack(alignment: .leading,spacing: 14) {
+                Text(vinyl.Title)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .multilineTextAlignment(.leading)
+
+                Text("\(vinyl.Artist)")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Color.white)
                 Text("Release Date: \(formattedDate(from: vinyl.ReleaseDate))")
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Color(.systemGray2))
                 Text("Genre: \(vinyl.Genre)")
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Color(.systemGray2))
                 Text("Condition: \(vinyl.Condition)")
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Color(.systemGray2))
                 Text("Cover Condition: \(vinyl.CoverCondition)")
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Color(.systemGray2))
                 Text("Price: $\(String(format: "%.2f", vinyl.Price))")
-                Text("Description: \(vinyl.Description)")
+                    .font(.headline)
+                    .fontWeight(.heavy)
+                    .foregroundColor(.purple)
+
+                Text("Description:")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundStyle(Color(.systemGray2))
+                Text(vinyl.Description)
+                    .font(.body)
+                    .foregroundStyle(Color(.systemGray2))
+
+                Spacer()
+
+                Button {
+                    showingTransactionView.toggle()
+                } label:{
+                    Text("Drop Anchor")
+                        .fontWeight(.semibold)
+                        .font(.title3)
+                        .padding(.vertical, 15)
+                        .frame(maxWidth: .infinity)
+                        .foregroundStyle(Color.purple.opacity(0.8))
+                        .background(Color.black)
+                        .cornerRadius(10)
+                }
+                .padding(.horizontal,30)
+                .shadow(color: .purple.opacity(0.8), radius: 15)
+                .sheet(isPresented: $showingTransactionView) {
+                    TransactionView()
+                }
             }
-            .font(.callout)
             .padding()
         }
-        Button(action: {
-            showingTransactionView.toggle()
-        }) {
-            Text("Buy")
-                .padding()
-                .foregroundColor(.white)
-                .background(Color.blue)
-                .cornerRadius(10)
-                .padding()
-        }
-        .sheet(isPresented: $showingTransactionView) {
-            TransactionView()
-        }
-        Spacer()
-        
+        .background(gradient)
         .navigationTitle("Vinyl Details")
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(
             leading:
@@ -53,7 +91,9 @@ struct ItemFullView: View {
                 }
         )
     }
+    
 }
+
 // Helper function to format date
 private func formattedDate(from date: Date) -> String {
     let formatter = DateFormatter()
@@ -61,8 +101,10 @@ private func formattedDate(from date: Date) -> String {
     return formatter.string(from: date)
 }
 
+// ... (rest of your code remains the same)
 
-// Sample Vinyl struct
+
+// Vinyl struct
 struct Vinyl: Identifiable {
     let id: Int
     let Title: String

@@ -42,9 +42,9 @@ struct NewItemView: View {
             .hidden()
         */
         let gradient = LinearGradient(
-                    gradient: Gradient(colors: [Color.black, Color.purple]), // Set your desired colors here
-                    startPoint: .topLeading, // Start the gradient from the top leading corner
-                    endPoint: .bottomTrailing // End the gradient at the bottom trailing corner
+                    gradient: Gradient(colors: [Color.black, Color.purple]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
                 )
 
        
