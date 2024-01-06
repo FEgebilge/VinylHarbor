@@ -75,9 +75,14 @@ struct SearchView: View {
                                 }label: {
                                     ItemRowView(vinyl:vinyl)
                                 }
+                                
                             }
                         }
+                       
+                    }.onAppear{
+                        refreshVinyl()
                     }
+                   
                 }
                 .background(gradient)
                 .navigationTitle("Search")

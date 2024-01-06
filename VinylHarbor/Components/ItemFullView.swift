@@ -10,8 +10,10 @@ import SwiftUI
 struct ItemFullView: View {
     var vinyl: Vinyl // Vinyl object to display details
     @Environment(\.presentationMode) var presentationMode
-    @State private var showingTransactionView = false
+    @Environment (\.dismiss) var dismiss
+    
     @EnvironmentObject var userAuthManager: UserAuthManager
+    
     
     let gradient = LinearGradient(
         gradient: Gradient(colors: [Color.black,Color.black, Color.purple]),
@@ -60,9 +62,9 @@ struct ItemFullView: View {
                 Spacer()
 
                 Button {
-                    showingTransactionView.toggle()
                     do {
                         try DatabaseManager.sellVinyl(SellID: vinyl.id, CurrentUserID: currentUser!.userID)
+                            dismiss()
                         } catch {
                             print("Error selling vinyl: \(error)")
                         }
@@ -78,9 +80,7 @@ struct ItemFullView: View {
                 }
                 .padding(.horizontal,30)
                 .shadow(color: .purple.opacity(0.8), radius: 15)
-                .sheet(isPresented: $showingTransactionView) {
-                    TransactionView()
-                }
+                
             }
             .padding()
         }
