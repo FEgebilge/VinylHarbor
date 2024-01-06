@@ -31,7 +31,7 @@ struct SearchView: View {
 
     
     let sampleVinyls: [Vinyl] = [
-        Vinyl(id: 10, Title: "SampleTit", Artist: "SampleArt", ReleaseDate: Date(), Genre: "SampleGen", Condition: "A", CoverCondition: "A", Price: 3, Description: "Iyi", SellerID: 5, CustomerID: 5)
+        Vinyl(id: 10, Title: "SampleTit", Artist: "SampleArt", ReleaseDate: Date(), Genre: "SampleGen", Condition: "A", CoverCondition: "A", Price: 3, Description: "Iyi", SellerID: 5, CustomerID: 5, OnSell: 1)
        
           // Add more sample vinyl records if needed...
       ]

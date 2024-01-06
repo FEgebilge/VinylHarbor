@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct ItemFullView: View {
-    let vinyl: Vinyl // Vinyl object to display details
+    var vinyl: Vinyl // Vinyl object to display details
     @Environment(\.presentationMode) var presentationMode
     @State private var showingTransactionView = false
+    
     
     let gradient = LinearGradient(
         gradient: Gradient(colors: [Color.black,Color.black, Color.purple]),
@@ -59,6 +60,11 @@ struct ItemFullView: View {
 
                 Button {
                     showingTransactionView.toggle()
+                    do {
+                        try DatabaseManager.sellVinyl(SellID: vinyl.id)
+                        } catch {
+                            print("Error selling vinyl: \(error)")
+                        }
                 } label:{
                     Text("Drop Anchor")
                         .fontWeight(.semibold)
@@ -117,6 +123,7 @@ struct Vinyl: Identifiable {
     let Description: String
     let SellerID: Int
     let CustomerID: Int
+    var OnSell:Int
 }
 
 // Sample data
@@ -131,7 +138,8 @@ let sampleVinyl = Vinyl(
     Price: 25.0,
     Description: "NM",
     SellerID: 101,
-    CustomerID: 0
+    CustomerID: 0,
+    OnSell:1
 )
 
 

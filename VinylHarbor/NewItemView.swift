@@ -166,7 +166,7 @@ struct NewItemView: View {
                   return
           }
 
-        DatabaseManager.insertVinyl(title: title, artist: artist, releaseDate: releaseDate, genre: genre, condition: condition, coverCondition: coverCondition, price: price, description: description, sellerID: sellerID)
+        DatabaseManager.insertVinyl(title: title, artist: artist, releaseDate: releaseDate, genre: genre, condition: condition, coverCondition: coverCondition, price: price, description: description, sellerID: sellerID, customerID: customerID, onSell: 1)
         
         isAddingNewItem = false
         onItemAdded?()

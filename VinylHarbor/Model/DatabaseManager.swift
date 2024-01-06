@@ -19,7 +19,7 @@ struct DatabaseManager {
         // Code to create tables
     }
 
-    static func insertVinyl(title: String, artist: String, releaseDate: Date, genre: String, condition: String, coverCondition: String, price: Double,description: String, sellerID: Int) {
+    static func insertVinyl(title: String, artist: String, releaseDate: Date, genre: String, condition: String, coverCondition: String, price: Double,description: String, sellerID: Int, customerID:Int, onSell:Int) {
         let vinyls = Table("Vinyl")
         let vinylID = Expression<Int64>("VinylID")
         let titleExpression = Expression<String>("Title")
@@ -31,7 +31,9 @@ struct DatabaseManager {
         let priceExpression = Expression<Double>("Price")
         let descriptionExpression = Expression<String>("Description")
         let sellerIDExpression = Expression<Int>("SellerID")
-
+        let customerIDExpression = Expression<Int>("CustomerID")
+        let onSellExpression = Expression<Int>("OnSell")
+        
         do {
             try db.run(vinyls.insert(
                 titleExpression <- title,
@@ -42,7 +44,9 @@ struct DatabaseManager {
                 coverConditionExpression <- coverCondition,
                 priceExpression <- price,
                 descriptionExpression <- description,
-                sellerIDExpression <- sellerID
+                sellerIDExpression <- sellerID,
+                customerIDExpression <- customerID,
+                onSellExpression <- onSell
             ))
             print("Inserted Vinyl into Vinyls table")
         } catch {
@@ -69,11 +73,12 @@ struct DatabaseManager {
             let description = Expression<String>("Description")
             let sellerID = Expression<Int>("SellerID")
             let customerID = Expression<Int>("CustomerID")
+            let onSell = Expression<Int>("OnSell")
             
             // Define the search filter
             var query = vinylTable
             if !searchText.isEmpty {
-                query = query.filter(title.like("%\(searchText)%") || artist.like("%\(searchText)%"))
+                query = query.filter(onSell==1 && (title.like("%\(searchText)%") || artist.like("%\(searchText)%")))
             }
             
             for row in try db.prepare(query) {
@@ -88,7 +93,8 @@ struct DatabaseManager {
                     Price: row[price],
                     Description: row[description],
                     SellerID: row[sellerID],
-                    CustomerID: row[customerID]
+                    CustomerID: row[customerID],
+                    OnSell: row[onSell]
                 )
                 vinyls.append(vinyl)
             }
@@ -248,9 +254,10 @@ struct DatabaseManager {
             let description = Expression<String>("Description")
             let sellerID = Expression<Int>("SellerID")
             let customerID = Expression<Int>("CustomerID")
+            let onSell = Expression<Int>("OnSell")
             // Define expressions for other columns
 
-            let filteredVinyls = vinylsTable.filter(currentUserID == sellerID )
+            let filteredVinyls = vinylsTable.filter(onSell==1 && currentUserID == sellerID )
 
             for row in try db.prepare(filteredVinyls) {
                 let newVinyl = Vinyl(
@@ -264,7 +271,8 @@ struct DatabaseManager {
                     Price: row[price],
                     Description: row[description],
                     SellerID: row[sellerID],
-                    CustomerID: row[customerID]
+                    CustomerID: row[customerID],
+                    OnSell: row[onSell]
                 )
                 vinyls.append(newVinyl)
             }
@@ -295,6 +303,7 @@ struct DatabaseManager {
             let description = Expression<String>("Description")
             let sellerID = Expression<Int>("SellerID")
             let customerID = Expression<Int>("CustomerID")
+            let onSell = Expression<Int>("OnSell")
             // Define expressions for other columns
 
             let filteredVinyls = vinylsTable.filter(currentUserID == customerID )
@@ -311,7 +320,8 @@ struct DatabaseManager {
                     Price: row[price],
                     Description: row[description],
                     SellerID: row[sellerID],
-                    CustomerID: row[customerID]
+                    CustomerID: row[customerID],
+                    OnSell: row[onSell]
                 )
                 vinyls.append(newVinyl)
             }
@@ -336,6 +346,24 @@ struct DatabaseManager {
             print("Deleted \(deletedRows) rows")
         } catch {
             // Print the error description if an error occurs
+            print("Error deleting record: \(error.localizedDescription)")
+            throw error
+        }
+    }
+    
+    static func sellVinyl(SellID: Int) throws{
+        let vinyls = Table("Vinyl")
+        let vinylID = Expression<Int>("VinylID")
+        let onSellColumn = Expression<Int>("OnSell")
+        print(vinylID)
+        let recordToSell = vinyls.filter(vinylID == SellID)
+        
+        do {
+            let db = try Connection(dbPath)
+            let update = recordToSell.update(onSellColumn <- 0)
+          //Change the recordToSells on sell value to 0 in that line
+            try db.run(update)
+        } catch {
             print("Error deleting record: \(error.localizedDescription)")
             throw error
         }
