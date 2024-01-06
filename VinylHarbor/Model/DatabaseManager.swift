@@ -351,18 +351,21 @@ struct DatabaseManager {
         }
     }
     
-    static func sellVinyl(SellID: Int) throws{
+    static func sellVinyl(SellID: Int, CurrentUserID:Int) throws{
         let vinyls = Table("Vinyl")
         let vinylID = Expression<Int>("VinylID")
         let onSellColumn = Expression<Int>("OnSell")
+        var customerID = Expression<Int>("CustomerID")
         print(vinylID)
         let recordToSell = vinyls.filter(vinylID == SellID)
         
         do {
             let db = try Connection(dbPath)
             let update = recordToSell.update(onSellColumn <- 0)
+            let update2 = recordToSell.update(customerID <- CurrentUserID)
           //Change the recordToSells on sell value to 0 in that line
             try db.run(update)
+            try db.run(update2)
         } catch {
             print("Error deleting record: \(error.localizedDescription)")
             throw error

@@ -19,6 +19,7 @@ struct SearchView: View {
     func refreshVinyl(){
         do {
             vinyls = try DatabaseManager.getVinyls(searchText: searchText)
+            vinyls.reverse()
             
         } catch {
             print("Error fetching vinyls:", error)

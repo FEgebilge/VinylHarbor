@@ -11,13 +11,14 @@ struct ItemFullView: View {
     var vinyl: Vinyl // Vinyl object to display details
     @Environment(\.presentationMode) var presentationMode
     @State private var showingTransactionView = false
-    
+    @EnvironmentObject var userAuthManager: UserAuthManager
     
     let gradient = LinearGradient(
         gradient: Gradient(colors: [Color.black,Color.black, Color.purple]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
+    let currentUser = UserAuthManager.shared.currentUser
 
     var body: some View {
         ScrollView {
@@ -61,7 +62,7 @@ struct ItemFullView: View {
                 Button {
                     showingTransactionView.toggle()
                     do {
-                        try DatabaseManager.sellVinyl(SellID: vinyl.id)
+                        try DatabaseManager.sellVinyl(SellID: vinyl.id, CurrentUserID: currentUser!.userID)
                         } catch {
                             print("Error selling vinyl: \(error)")
                         }

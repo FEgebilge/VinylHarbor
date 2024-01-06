@@ -26,8 +26,7 @@ struct ProfileView: View {
             userInfoDetails
             vinylFilterBar
             vinylsInProfileView
-            
-            Spacer()
+        
         }
         .background(Color.black)
         .foregroundStyle(Color.white)
@@ -126,9 +125,7 @@ extension ProfileView{
                         Spacer()
                         UserStatsView()
                         
-                        
                     }
-                    
                 }
                     .padding(.horizontal))
         }
@@ -178,23 +175,26 @@ extension ProfileView{
     
     
     var vinylsInProfileView : some View {
-        List {
-            ForEach(getDataForSelectedFilter(), id: \.id) { dataItem in
-                if selectedFilter == .onSell {
-                    ItemRowView(vinyl: dataItem)
-                }
-            }
-            .onDelete { indices in
-                // Perform deletion for items selected by swipe or EditButton
-                let vinylsToDelete = indices.map { getDataForSelectedFilter()[$0] }
-                for vinyl in vinylsToDelete {
-                    deleteVinyl(vinyl: vinyl)
-                }
-            }
-        }
-        .listStyle(.plain)
-    }
-
+        let filteredVinyls = getDataForSelectedFilter().reversed()
+        return List {
+               ForEach(filteredVinyls, id: \.id) { dataItem in
+                   if (selectedFilter == .onSell || selectedFilter == .buys ) {
+                       ItemRowView(vinyl: dataItem)
+                           .swipeActions {
+                               if selectedFilter == .onSell {
+                                   Button(role: .destructive) {
+                                       deleteVinyl(vinyl: dataItem)
+                                   } label: {
+                                       Label("Delete", systemImage: "trash")
+                                   }
+                               }
+                           }
+                   }
+               }
+           }
+           .listStyle(.plain)
+       }
+    
     func deleteVinyl(vinyl: Vinyl) {
         // Your logic to delete the vinyl from the "On Sell" records goes here
         // For example, if you have an array of vinylsOnSell:
@@ -206,7 +206,7 @@ extension ProfileView{
             } catch {
                 print("Error deleting vinyl: \(error)")
             }
-
+            
         }
     }
     
