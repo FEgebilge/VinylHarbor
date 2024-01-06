@@ -371,6 +371,47 @@ struct DatabaseManager {
             throw error
         }
     }
+    
+    
+    struct Transaction {
+        var transactionID: Int
+        var vinylID: Int
+        var customerID: Int
+        var sellerID: Int
+        var transactionDate: String
+        var transactionAmount: Double
+    }
+
+   
+    static func insertTransaction(vinylID: Int, customerID: Int, sellerID: Int, transactionDate: Date, transactionAmount: Double) {
+        do {
+            let db = try Connection(dbPath)
+            let transactionTable = Table("Transaction_Vinyl")
+            
+            let transactionIDExpression = Expression<Int>("TransactionID")
+            let vinylIDExpression = Expression<Int>("VinylID")
+            let customerIDExpression = Expression<Int>("CustomerID")
+            let sellerIDExpression = Expression<Int>("SellerID")
+            let transactionDateExpression = Expression<Date>("TransactionDate")
+            let transactionAmountExpression = Expression<Double>("TransactionAmount")
+           
+            
+            // Insert the data into the Transaction table
+            try db.run(transactionTable.insert(
+                vinylIDExpression <- vinylID,
+                customerIDExpression <- customerID,
+                sellerIDExpression <- sellerID,
+                transactionDateExpression <- transactionDate,
+                transactionAmountExpression <- transactionAmount
+            ))
+            
+            print("Data inserted successfully.")
+        } catch {
+            print("Error inserting data: \(error)")
+        }
+    }
+
+   
 
     // Implement other database operations like querying, updating, deleting, etc.
 }

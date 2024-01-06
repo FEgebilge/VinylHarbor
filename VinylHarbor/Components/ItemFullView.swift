@@ -9,10 +9,12 @@ import SwiftUI
 
 struct ItemFullView: View {
     var vinyl: Vinyl // Vinyl object to display details
+    @State private var showAlert = false
+    @State private var showTransactionSuccessfull = false
     @Environment(\.presentationMode) var presentationMode
     @Environment (\.dismiss) var dismiss
-    
     @EnvironmentObject var userAuthManager: UserAuthManager
+    
     
     
     let gradient = LinearGradient(
@@ -22,6 +24,16 @@ struct ItemFullView: View {
             )
     let currentUser = UserAuthManager.shared.currentUser
 
+    func CompleteTransaction(){
+        do{
+        try DatabaseManager.sellVinyl(SellID: vinyl.id, CurrentUserID: currentUser!.userID)
+        }catch{
+            print(error)
+            showAlert=true
+        }
+        DatabaseManager.insertTransaction(vinylID: vinyl.id, customerID: currentUser!.userID, sellerID: vinyl.SellerID, transactionDate: Date(), transactionAmount: vinyl.Price)
+        
+    }
     var body: some View {
         ScrollView {
             VStack(alignment: .leading,spacing: 14) {
@@ -62,12 +74,9 @@ struct ItemFullView: View {
                 Spacer()
 
                 Button {
-                    do {
-                        try DatabaseManager.sellVinyl(SellID: vinyl.id, CurrentUserID: currentUser!.userID)
-                            dismiss()
-                        } catch {
-                            print("Error selling vinyl: \(error)")
-                        }
+                    CompleteTransaction()
+                    showTransactionSuccessfull=true
+                    dismiss()
                 } label:{
                     Text("Drop Anchor")
                         .fontWeight(.semibold)
@@ -82,6 +91,16 @@ struct ItemFullView: View {
                 .shadow(color: .purple.opacity(0.8), radius: 15)
                 
             }
+            .alert(isPresented: $showAlert, content: {
+                Alert(title: Text("Error!"), message: Text("Error While Selling"), dismissButton: .default(Text("OK")){
+                    showAlert=false
+                })
+            })
+            .alert(isPresented: $showTransactionSuccessfull, content: {
+                Alert(title: Text("Transaction Successfull!"), message: Text("Thanks for purchase"), dismissButton: .default(Text("OK")){
+                    showTransactionSuccessfull=false
+                })
+            })
             .padding()
         }
         .background(gradient)
@@ -144,10 +163,12 @@ let sampleVinyl = Vinyl(
 )
 
 
-
+/*
 struct VinylDetailView_Previews: PreviewProvider {
     static var previews: some View {
         ItemFullView(vinyl: sampleVinyl)
     }
+ 
 }
 
+*/
