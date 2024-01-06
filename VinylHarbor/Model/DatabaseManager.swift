@@ -76,9 +76,9 @@ struct DatabaseManager {
             let onSell = Expression<Int>("OnSell")
             
             // Define the search filter
-            var query = vinylTable
+            var query = vinylTable.filter(onSell==1)
             if !searchText.isEmpty {
-                query = query.filter(onSell==1 && (title.like("%\(searchText)%") || artist.like("%\(searchText)%")))
+                query = query.filter(title.like("%\(searchText)%") || artist.like("%\(searchText)%"))
             }
             
             for row in try db.prepare(query) {
