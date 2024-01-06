@@ -54,11 +54,19 @@ extension ProfileView{
     }
     
     var headerView: some View{
+        
+        let gradient = LinearGradient(
+                    gradient: Gradient(colors: [Color.black, Color.purple]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+
+        
         if let currentUser = userAuthManager.currentUser  {
             return AnyView(
                 ZStack(alignment:.bottomLeading){
                     
-                    Color(.purple)
+                    gradient
                         .ignoresSafeArea()
                     
                     VStack {
