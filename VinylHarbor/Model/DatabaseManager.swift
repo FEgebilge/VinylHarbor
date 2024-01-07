@@ -118,7 +118,7 @@ struct DatabaseManager {
                              sellerRating: Double,
                              customerRating: Double,
                              description: String,
-                             password: String) {
+                             password: String)throws {
 
           let users = Table("User")
           let userID = Expression<Int64>("UserID")
@@ -154,7 +154,8 @@ struct DatabaseManager {
               ))
               print("Inserted User into Users table")
           } catch {
-              print("Insertion failed: \(error)")
+              print("Error creating user: \(error.localizedDescription)")
+              throw error
           }
       }
         
@@ -407,11 +408,32 @@ struct DatabaseManager {
             
             print("Data inserted successfully.")
         } catch {
-            print("Error inserting data: \(error)")
+            
         }
     }
 
-   
+    static func fetchSellerUsername(for sellerID: Int) -> String? {
+            let users = Table("User")
+            let userID = Expression<Int>("UserID")
+            let usernameExp = Expression<String>("Username")
+
+            // Assuming you have a db reference initialized elsewhere
+            do {
+                let db = try Connection(dbPath)
+                // Filter users based on SellerID
+                let user = try db.pluck(users.filter(userID == sellerID))
+
+                // If user exists, return the username associated with SellerID
+                if let user = user {
+                    return user[usernameExp]
+                } else {
+                    return nil // Seller not found
+                }
+            } catch {
+                print("Error: \(error)")
+                return nil
+            }
+        }
 
     // Implement other database operations like querying, updating, deleting, etc.
 }

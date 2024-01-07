@@ -46,7 +46,7 @@ struct RegisterationView: View {
                 SignTextFields(imageName: "person", placeHolderText: "Username", text: $username)
                 SignTextFields(imageName: "person", placeHolderText: "Name", text: $name)
                 SignTextFields(imageName: "envelope", placeHolderText: "Email", text: $email)
-                SignTextFields(imageName: "phone", placeHolderText: "Phone", text: $phone)
+                SignTextFields(imageName: "phone", placeHolderText: "Phone (start with country code)", text: $phone)
                 SignTextFields(imageName: "house", placeHolderText: "Billing Address", text: $billingAddress)
                 SignTextFields(imageName: "house", placeHolderText: "Shipping Adress", text: $shippingAddress)
                 SignTextFields(imageName: "mappin", placeHolderText: "Location", text: $location)
@@ -107,9 +107,16 @@ struct RegisterationView: View {
               // Show an alert or perform some action to notify the user about empty fields
               return
           }
-        DatabaseManager.createUser(username: username, name: name, email: email, phone: phone, billingAddress: billingAddress, shippingAddress: shippingAddress, location: location, bookmarkedVinyls: [], sellerRating: 0 , customerRating: 0, description: descrtiption, password: password)
-        print("User added to database")
-        dismiss()
+        do{
+            try DatabaseManager.createUser(username: username, name: name, email: email, phone: phone, billingAddress: billingAddress, shippingAddress: shippingAddress, location: location, bookmarkedVinyls: [], sellerRating: 0 , customerRating: 0, description: descrtiption, password: password)
+            print("User added to database")
+            dismiss()
+        }catch{
+            print(error.localizedDescription)
+        }
+        
+        
+        
 }
 
 

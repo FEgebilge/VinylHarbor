@@ -11,6 +11,7 @@ struct ItemFullView: View {
     var vinyl: Vinyl // Vinyl object to display details
     @State private var showAlert = false
     @State private var showTransactionSuccessfull = false
+    @State private var sellerUsername: String = ""
     @Environment(\.presentationMode) var presentationMode
     @Environment (\.dismiss) var dismiss
     @EnvironmentObject var userAuthManager: UserAuthManager
@@ -36,7 +37,12 @@ struct ItemFullView: View {
     }
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading,spacing: 14) {
+            VStack(alignment: .leading, spacing: 14) {
+                Text("Seller: \(sellerUsername)")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Color.gray)
+                
                 Text(vinyl.Title)
                     .font(.largeTitle)
                     .fontWeight(.bold)
@@ -58,11 +64,7 @@ struct ItemFullView: View {
                 Text("Cover Condition: \(vinyl.CoverCondition)")
                     .fontWeight(.semibold)
                     .foregroundStyle(Color(.systemGray2))
-                Text("Price: $\(String(format: "%.2f", vinyl.Price))")
-                    .font(.headline)
-                    .fontWeight(.heavy)
-                    .foregroundColor(.purple)
-
+                
                 Text("Description:")
                     .font(.headline)
                     .fontWeight(.bold)
@@ -71,26 +73,37 @@ struct ItemFullView: View {
                     .font(.body)
                     .foregroundStyle(Color(.systemGray2))
 
+                
+                Text("Price: $\(String(format: "%.2f", vinyl.Price))")
+                    .font(.headline)
+                    .fontWeight(.heavy)
+                    .foregroundColor(.purple)
+
                 Spacer()
 
-                Button {
-                    CompleteTransaction()
-                    showTransactionSuccessfull=true
-                    dismiss()
-                } label:{
-                    Text("Drop Anchor")
-                        .fontWeight(.semibold)
-                        .font(.title3)
-                        .padding(.vertical, 15)
-                        .frame(maxWidth: .infinity)
-                        .foregroundStyle(Color.purple.opacity(0.8))
-                        .background(Color.black)
-                        .cornerRadius(10)
-                }
-                .padding(.horizontal,30)
-                .shadow(color: .purple.opacity(0.8), radius: 15)
-                
+                if currentUser?.userID != vinyl.SellerID{
+                                  Button {
+                                      CompleteTransaction()
+                                      showTransactionSuccessfull=true
+                                      dismiss()
+                                  } label:{
+                                      Text("Drop Anchor")
+                                          .fontWeight(.semibold)
+                                          .font(.title3)
+                                          .padding(.vertical, 15)
+                                          .frame(maxWidth: .infinity)
+                                          .foregroundStyle(Color.purple.opacity(0.8))
+                                          .background(Color.black)
+                                          .cornerRadius(10)
+                                  }
+                                  .padding(.horizontal,30)
+                                  .shadow(color: .purple.opacity(0.8), radius: 15)
+                              }
+                Spacer()
+                  
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding()
             .alert(isPresented: $showAlert, content: {
                 Alert(title: Text("Error!"), message: Text("Error While Selling"), dismissButton: .default(Text("OK")){
                     showAlert=false
@@ -101,7 +114,11 @@ struct ItemFullView: View {
                     showTransactionSuccessfull=false
                 })
             })
-            .padding()
+           
+        }
+        .frame(maxWidth: .infinity)
+        .onAppear{
+            sellerUsername = DatabaseManager.fetchSellerUsername(for: vinyl.SellerID) ?? "Unkown"
         }
         .background(gradient)
         .navigationTitle("Vinyl Details")
