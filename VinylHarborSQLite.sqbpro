@@ -1,4 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/Users/egebilge/Developer/VinylHarbor/VinylHarborSQLite.db" readonly="0" foreign_keys="" case_sensitive_like="" temp_store="" wal_autocheckpoint="" synchronous=""/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="2207"/><column_width id="4" width="0"/></tab_structure><tab_browse><current_table name="0,0:"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1">CREATE TABLE IF NOT EXISTS Transaction_Vinyl (
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/Users/egebilge/Developer/VinylHarbor/VinylHarborSQLite.db" readonly="0" foreign_keys="" case_sensitive_like="" temp_store="" wal_autocheckpoint="" synchronous=""/><attached/><window><main_tabs open="structure browser pragmas query" current="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="2207"/><column_width id="4" width="0"/></tab_structure><tab_browse><current_table name="0,0:"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1">CREATE TABLE Vinyl (
+    VinylID INTEGER PRIMARY KEY AUTOINCREMENT,
+    Title TEXT NOT NULL,
+    Artist TEXT NOT NULL,
+    ReleaseDate DATE NOT NULL,
+    Genre TEXT NOT NULL,
+    Condition TEXT NOT NULL,
+    CoverCondition TEXT NOT NULL,
+    Price REAL NOT NULL,
+    Description TEXT NOT NULL,
+    SellerID INTEGER NOT NULL,
+	CustomerID INTEGER NOT NULL,
+    OnSell INTEGER NOT NULL CHECK (onSell IN (0, 1)) -- Adding the OnSell attribute as a boolean field
+);
+
+CREATE TABLE IF NOT EXISTS Transaction_Vinyl (
     TransactionID INTEGER PRIMARY KEY AUTOINCREMENT,
     VinylID INTEGER REFERENCES Vinyl(VinylID),
     CustomerID INTEGER REFERENCES User(UserID),
@@ -6,4 +21,22 @@
     TransactionDate DATE,
     TransactionAmount REAL
 );
+
+CREATE TABLE IF NOT EXISTS User (
+	UserID INTEGER PRIMARY KEY AUTOINCREMENT,
+	Username TEXT UNIQUE CHECK (Username NOT LIKE '% %'),
+	Name TEXT,
+	Email TEXT UNIQUE,
+	Phone TEXT ,
+	BillingAddress TEXT,
+	ShippingAddress TEXT,
+	Location TEXT,
+	BookmarkedVinyls TEXT,
+	SellerRating REAL,
+	CustomerRating REAL,
+	Description TEXT,
+	Password TEXT CHECK (Password NOT LIKE '% %')
+);
+
+
 </sql><current_tab id="0"/></tab_sql></sqlb_project>
