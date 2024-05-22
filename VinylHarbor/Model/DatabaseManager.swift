@@ -7,7 +7,24 @@
 
 import Foundation
 import SQLite
+import CryptoKit
+
 var dbPath="/Users/egebilge/Developer/VinylHarbor/VinylHarborSQLite.db"
+
+
+func generateSalt(length: Int = 16) -> String {
+    var salt = Data(count: length)
+    _ = salt.withUnsafeMutableBytes { SecRandomCopyBytes(kSecRandomDefault, length, $0.baseAddress!) }
+    return salt.base64EncodedString()
+}
+
+func hashPassword(_ password: String, with salt: String) -> String {
+    let input = password + salt
+    let inputData = Data(input.utf8)
+    let hashed = SHA256.hash(data: inputData)
+    return hashed.compactMap { String(format: "%02x", $0) }.joined()
+}
+
 
 
 struct DatabaseManager {
@@ -106,6 +123,8 @@ struct DatabaseManager {
         
         return vinyls
     }
+    
+ 
 
     static func createUser(username: String,
                              name: String,
@@ -134,10 +153,13 @@ struct DatabaseManager {
           let customerRatingExp = Expression<Double>("CustomerRating")
           let descriptionExp = Expression<String>("Description")
           let passwordExp = Expression<String>("Password")
+          let saltExp = Expression<String>("Salt")
 
           do {
               let bookmarkedVinylsString = try JSONSerialization.data(withJSONObject: bookmarkedVinyls, options: [])
                       let bookmarkedVinylsEncoded = String(data: bookmarkedVinylsString, encoding: .utf8) ?? ""
+              let salt = generateSalt()
+              let hashPassword = hashPassword(password, with: salt)
               try db.run(users.insert(
                   usernameExp <- username,
                   nameExp <- name,
@@ -150,7 +172,8 @@ struct DatabaseManager {
                   sellerRatingExp <- sellerRating,
                   customerRatingExp <- customerRating,
                   descriptionExp <- description,
-                  passwordExp <- password
+                  saltExp <- salt,
+                  passwordExp <- hashPassword
               ))
               print("Inserted User into Users table")
           } catch {
@@ -207,25 +230,30 @@ struct DatabaseManager {
         let customerRatingColumn = Expression<Double>("CustomerRating")
         let descriptionColumn = Expression<String>("Description")
         let passwordColumn = Expression<String>("Password")
+        let saltColumn = Expression<String>("Salt")
 
-        
-        let query = users.filter(usernameColumn == username && passwordColumn == password)
+        let query = users.filter(usernameColumn == username)
 
         do {
-          
             if let userRow = try db.pluck(query) {
-                
-                let bookmarkedVinylsString = userRow[bookmarkedVinylsColumn]
-                let bookmarkedVinylsData = bookmarkedVinylsString.data(using: .utf8) ?? Data()
-                let bookmarkedVinylsArray = try JSONDecoder().decode([Int].self, from: bookmarkedVinylsData)
-                
-                let user = User(userID:  userRow[userIDColumn], username: userRow[usernameColumn], name: userRow[nameColumn], email: userRow[emailColumn], phone: userRow[phoneColumn], billingAddress: userRow[billingAddressColumn], shippingAddress: userRow[shippingAddressColumn], location: userRow[locationColumn], bookmarkedVinyls:bookmarkedVinylsArray, sellerRating: userRow[sellerRatingColumn], customerRating: userRow[customerRatingColumn], description: userRow[descriptionColumn])
-                return user
-                
+                let storedSalt = userRow[saltColumn]
+                let hashedPassword = hashPassword(password, with: storedSalt)
+
+                if hashedPassword == userRow[passwordColumn] {
+                    let bookmarkedVinylsString = userRow[bookmarkedVinylsColumn]
+                    let bookmarkedVinylsData = bookmarkedVinylsString.data(using: .utf8) ?? Data()
+                    let bookmarkedVinylsArray = try JSONDecoder().decode([Int].self, from: bookmarkedVinylsData)
+
+                    let user = User(userID:  userRow[userIDColumn], username: userRow[usernameColumn], name: userRow[nameColumn], email: userRow[emailColumn], phone: userRow[phoneColumn], billingAddress: userRow[billingAddressColumn], shippingAddress: userRow[shippingAddressColumn], location: userRow[locationColumn], bookmarkedVinyls: bookmarkedVinylsArray, sellerRating: userRow[sellerRatingColumn], customerRating: userRow[customerRatingColumn], description: userRow[descriptionColumn])
+                    return user
+                } else {
+                    // Password is incorrect
+                    print("Username or password is wrong")
+                    return nil
+                }
             } else {
-                // Authentication failed
-                
-                print("Username or password is wrong")
+                // User not found
+                print("User not found")
                 return nil
             }
         } catch {
@@ -234,6 +262,7 @@ struct DatabaseManager {
             return nil
         }
     }
+
     
     static func getVinylsForSellerID(currentUserID: Int) -> [Vinyl] {
         
